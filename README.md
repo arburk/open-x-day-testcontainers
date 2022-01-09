@@ -10,15 +10,29 @@
 
 
 # <a id="Motivation"></a> Motivation
-
+- DB/JPA unit tests using in-memory db like h2 or derby differ to much from real database with respect to
+  - values (i.e. Inetger vs. BidDecimal) 
+  - special DB functions (e.g. [Listagg](https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions089.htm#SQLRF30030)) 
+  - trigger, views, etc.
+- Development based on local DB or any other local server vs. CI build (e.g. Jenkins, Github actions etc.) 
 
 
 
 # <a id="Top1"></a> What are [testcontainers][Testcontainers]
-### what is it for?
-### who supports/uses it
+>> Testcontainers is a Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.
+> - ___Data access layer integration tests:___
+> 
+>   use a containerized instance of any database to test your data access layer code
+> - ___Application integration tests:___
+>
+>   for running your application in a short-lived test mode with dependencies, such as databases, message queues or web servers.
+> - ___UI/Acceptance tests___: 
+>
+>  use containerized web browsers, compatible with Selenium, for conducting automated UI tests. Each test can get a fresh instance of the browser, with no browser state, plugin variations or automated browser upgrades to worry about.
 
-
+### Prerequisite
+- [General Docker requirements](https://www.testcontainers.org/supported_docker_environment/)
+- A supported JVM testing framework like Junit(4/5), Spock or manually controlled
 
 # <a id="Top2"></a> Example usage
 
