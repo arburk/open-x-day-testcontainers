@@ -74,8 +74,17 @@
     ```
 
 
-# <a id="Top3"></a>DB testing from scratch using flyway
-
+# <a id="Top3"></a>DB testing from scratch using [flyway](https://flywaydb.org/documentation/)
+### Prerequisite
+- start Postgres DB in order to run application
+  ```shell
+  docker run --name openxday_2022-01-27 \ 
+      -p 5432:5432 \
+      -e POSTGRES_USER=postgres \
+      -e POSTGRES_PASSWORD=postgres \
+      -e POSTGRES_DB=openx 
+    postgres:12
+  ```
 
 
 
