@@ -1,3 +1,19 @@
+<!--
+ * Copyright 2022 Baloise Group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
 # Agenda
 1. [Motivation](#Motivation)
 2. [What are testcontainers](#Top1)
@@ -76,7 +92,7 @@
 
 # <a id="Top3"></a>DB testing from scratch using [flyway](https://flywaydb.org/documentation/)
 ### Prerequisite
-- start Postgres DB in order to run application
+- start Postgres DB in order to run application (not testing)
   ```shell
   docker run --name openxday_2022-01-27 \ 
       -p 5432:5432 \
@@ -85,7 +101,12 @@
       -e POSTGRES_DB=openx 
     postgres:12
   ```
-
+- perform initial application loading test which succeeds `mvn test -f pom.xml`
+- for testing shutdown docker container `openxday_2022-01-27` and perform maven test build again `mvn test -f pom.xml`
+  
+  Test will fail now, cause application does not start as db connection cannot be established any longer.
+- Add Testcontainer as described in [previous chapter](#Top2).
+- perform maven test build again `mvn test -f pom.xml` and monitor it suceedes again (as CI build would do).
 
 
 # <a id="Top4"></a> Migration from inmem-db to oracle live demo
