@@ -21,23 +21,53 @@
 # <a id="Top1"></a> What are [testcontainers][Testcontainers]
 > Testcontainers is a Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.
 > - ___Data access layer integration tests:___
-> 
 >   use a containerized instance of any database to test your data access layer code
 > - ___Application integration tests:___
->
 >   for running your application in a short-lived test mode with dependencies, such as databases, message queues or web servers.
-> - ___UI/Acceptance tests___: 
->
+> - ___UI/Acceptance tests___:
 >  use containerized web browsers, compatible with Selenium, for conducting automated UI tests. Each test can get a fresh instance of the browser, with no browser state, plugin variations or automated browser upgrades to worry about.
->
+
 
 ### Prerequisite
 - [General Docker requirements](https://www.testcontainers.org/supported_docker_environment/)
 - A supported JVM testing framework like Junit(4/5), Spock or manually controlled
 
 # <a id="Top2"></a> Example usage
-
-
+1. Add maven dependency for entire lifecycle management
+    ```xml
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.16.2</version>
+      <scope>test</scope>
+    </dependency>
+    ```
+2. Add certain testcontainer(s) you need to test on (e.g. Postgres)
+    ```xml
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.16.2</version>
+      <scope>test</scope>
+    </dependency>
+    ```
+3. Configure testcontainer in your test class (e.g. JUnit5)
+    ```java
+    import javax.transaction.TransactionScoped;@Testcontainers
+    class MyDbTestClass {
+      ...
+      @Container
+      public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:11.2")
+         .withDatabaseName("testdb")
+         .withUsername("sa")
+         .withPassword("sa");
+      ...
+      @Test
+      void someTest() {
+        ...
+      }
+    }
+    ```
 
 
 # <a id="Top3"></a>DB testing from scratch using flyway
