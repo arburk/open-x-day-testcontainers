@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baloise.open.template;
+package com.baloise.open.xday.testcontainers;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class App {
+@SpringBootTest
+class TestcontainersApplicationTests {
 
-    public static void main(String[] args) {
-        final String x = "Hello World!";
-        System.out.println(x);
-    }
+	@Test
+	void contextLoads() {
+	}
+
 }
