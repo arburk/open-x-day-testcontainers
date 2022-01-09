@@ -21,11 +21,15 @@
 # <a id="Top1"></a> What are [testcontainers][Testcontainers]
 > Testcontainers is a Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.
 > - ___Data access layer integration tests:___
->   use a containerized instance of any database to test your data access layer code
+> 
+>    use a containerized instance of any database to test your data access layer code
 > - ___Application integration tests:___
->   for running your application in a short-lived test mode with dependencies, such as databases, message queues or web servers.
+> 
+>    for running your application in a short-lived test mode with dependencies, such as databases, message queues or web servers.
 > - ___UI/Acceptance tests___:
->  use containerized web browsers, compatible with Selenium, for conducting automated UI tests. Each test can get a fresh instance of the browser, with no browser state, plugin variations or automated browser upgrades to worry about.
+> 
+>    use containerized web browsers, compatible with Selenium, for conducting automated UI tests. Each test can get a fresh instance of the browser, with no browser state, plugin variations or automated browser upgrades to worry about.
+>   
 
 
 ### Prerequisite
