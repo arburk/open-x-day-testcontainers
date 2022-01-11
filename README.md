@@ -62,7 +62,7 @@
       <scope>test</scope>
     </dependency>
     ```
-2. Add certain testcontainer(s) you need to test on (e.g. Postgres)
+2. Add [certain testcontainer(s)](https://www.testcontainers.org/modules/databases/) you need to test on (e.g. Postgres)
     ```xml
     <dependency>
       <groupId>org.testcontainers</groupId>
@@ -121,34 +121,17 @@
     <scope>test</scope>
   </dependency>
   ```
-  ```java
-  @Testcontainers
-  @SpringBootTest
-  @ContextConfiguration(initializers = {TestcontainersApplicationTests.Initializer.class})
-  class TestcontainersApplicationTests {
+  ![java example](./docs/images/spring_boot_junit5_testcontainer_example.png)
+  
+  1: Add Testcontainer capability
+  
+  2: Add and configure Postgres Container loaded from dockerhub using image [postgres:12](https://hub.docker.com/_/postgres) 
 
-    @Container
-    public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
-        .withDatabaseName("openx")
-        .withUsername("postgres")
-        .withPassword("postgres");
-    
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-      public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-        TestPropertyValues.of(
-            "spring.datasource.url=" + postgres.getJdbcUrl(),
-            "spring.datasource.username=" + postgres.getUsername(),
-            "spring.datasource.password=" + postgres.getPassword()
-        ).applyTo(configurableApplicationContext.getEnvironment());
-      }
-    }
+  3: Spring specific: overwrite config values commonly defined in [resources/application.yaml](./src/main/resources/application.yaml)
 
-    @Test
-    void contextLoads() {
-      postgres.isRunning();
-    }
-  }
-  ```
+  4: access container (if necessary) within tests
+
+
 - perform maven test build again `mvn test -f pom.xml` and monitor it suceedes again (as CI build would do).
 > While executing test you will notice two docker containers started:
 > ![docker tescontainers](docs/images/test_container_list.png)
