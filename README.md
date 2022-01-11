@@ -73,14 +73,14 @@
     ```
 3. Configure testcontainer in your test class (e.g. JUnit5)
     ```java
-    import javax.transaction.TransactionScoped;@Testcontainers
+    @Testcontainers
     class MyDbTestClass {
       ...
       @Container
-      public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:11.2")
-         .withDatabaseName("testdb")
-         .withUsername("sa")
-         .withPassword("sa");
+      public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
+         .withDatabaseName("openx")
+         .withUsername("postgres")
+         .withPassword("postgres");
       ...
       @Test
       void someTest() {
@@ -101,12 +101,57 @@
       -e POSTGRES_DB=openx 
     postgres:12
   ```
+### Basic setup
 - perform initial application loading test which succeeds `mvn test -f pom.xml`
 - for testing shutdown docker container `openxday_2022-01-27` and perform maven test build again `mvn test -f pom.xml`
   
   Test will fail now, cause application does not start as db connection cannot be established any longer.
 - Add Testcontainer as described in [previous chapter](#Top2).
+  ```xml
+  <dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>1.16.2</version>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>1.16.2</version>
+    <scope>test</scope>
+  </dependency>
+  ```
+  ```java
+  @Testcontainers
+  @SpringBootTest
+  @ContextConfiguration(initializers = {TestcontainersApplicationTests.Initializer.class})
+  class TestcontainersApplicationTests {
+
+    @Container
+    public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
+        .withDatabaseName("openx")
+        .withUsername("postgres")
+        .withPassword("postgres");
+    
+    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+      public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+        TestPropertyValues.of(
+            "spring.datasource.url=" + postgres.getJdbcUrl(),
+            "spring.datasource.username=" + postgres.getUsername(),
+            "spring.datasource.password=" + postgres.getPassword()
+        ).applyTo(configurableApplicationContext.getEnvironment());
+      }
+    }
+
+    @Test
+    void contextLoads() {
+      postgres.isRunning();
+    }
+  }
+  ```
 - perform maven test build again `mvn test -f pom.xml` and monitor it suceedes again (as CI build would do).
+> While executing test you will notice two docker containers started:
+> ![docker tescontainers](docs/images/test_container_list.png)
 
 
 # <a id="Top4"></a> Migration from inmem-db to oracle live demo
