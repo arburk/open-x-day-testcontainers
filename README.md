@@ -136,6 +136,13 @@
 > While executing test you will notice two docker containers started:
 > ![docker tescontainers](docs/images/test_container_list.png)
 
+### Test with real data
+- Create table ['Demotable'](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/resources/db/migration/V1__initial_setup.sql) auto migrated using flyway
+- Add related [JPA class](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoEntity.java) 
+containing some testable logic (as well as related [repository](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepository.java))
+- Add [first test](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/test/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepositoryTest.java) based on "real" database
+
+review all required changes to steps above at feature branch [demo/DB_Testing_From_Scratch_WithData](https://github.com/arburk/open-x-day-testcontainers/tree/demo/DB_Testing_From_Scratch_WithData)
 
 # <a id="Top4"></a> Migration from inmem-db to oracle live demo
 
