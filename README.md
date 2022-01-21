@@ -19,7 +19,7 @@
 2. [What are testcontainers](#Top1)
 3. [Example usage](#Top2)
 4. [DB testing from scratch using flyway](#Top3)
-5. [Migration from inmem-db to oracle live demo](#Top4)
+5. [Migration from derby to oracle](#Top4)
 6. [Limitations](#Top5)
 7. [Conclusion](#Top6)
 
@@ -144,9 +144,52 @@ containing some testable logic (as well as related [repository](https://github.c
 
 review all required changes to steps above at feature branch [demo/DB_Testing_From_Scratch_WithData](https://github.com/arburk/open-x-day-testcontainers/tree/demo/DB_Testing_From_Scratch_WithData)
 
-# <a id="Top4"></a> Migration from inmem-db to oracle live demo
+# <a id="Top4"></a> Migration from [derby](https://db.apache.org/derby/#What+is+Apache+Derby%3F) to [oracle](https://www.oracle.com/ch-de/database/technologies/)
+### Major problems with different database test environment
+- Special DB features not available (e.g., Listagg)
+  
+  Requires additional code implementing `org.apache.derby.agg.Aggregator` interface subsequently registed in derby:
+  ```java
+  public class Listagg<V extends Number> implements Aggregator<Number, String, Listagg<V>> {
+  
+     private ArrayList<Number> list = null;
+   
+     public Listagg() { }
+   
+     @Override
+     public void init() {
+       list = new ArrayList<>();
+     }
+   
+     @Override
+     public void accumulate(Number number) {
+       list.add(number);
+     }
+   
+     @Override
+     public void merge(Listagg<V> vListagg) {
+       list.addAll(vListagg.list);
+     }
+   
+     @Override
+     public String terminate() {
+       return StringUtils.join(list, ",");
+     }
+  }
+  ```
+  ```sql
+  CREATE DERBY AGGREGATE Listagg FOR Numeric
+  RETURNS VARCHAR(255)
+  EXTERNAL NAME 'com.baloise.open.xday.testcontainers.derby.Listagg';
+  ```
+- Types differ (Integer vs. BigDecimal)
+- Syntax differ (e.g. Trigger)
+
+  Requires alternative SQL scripts to setup test environment
 
 
+> Oracle vs. Derby is +20 second for approximately 200 tests.
+> DBFacade test derby ca. 1:10 min vs Oracle Testcontainer 1:30 min.
 
 # <a id="Top5"></a>Limitations
 
