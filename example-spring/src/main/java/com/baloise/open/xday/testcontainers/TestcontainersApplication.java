@@ -15,14 +15,21 @@
  */
 package com.baloise.open.xday.testcontainers;
 
+import com.baloise.open.xday.testcontainers.infrastructure.db.demo.DemoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TestcontainersApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TestcontainersApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(TestcontainersApplication.class, args);
+  }
+
+  @Autowired
+  public void listAllDemoEntities(DemoRepository repo) {
+    repo.findAll().forEach(System.out::println);
+  }
 
 }
