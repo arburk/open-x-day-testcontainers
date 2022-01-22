@@ -30,8 +30,8 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
-  <groupId>com.baloise.open.xday</groupId>
-  <artifactId>testcontainers</artifactId>
+  <groupId>com.baloise.open.xday.testcontainers</groupId>
+  <artifactId>example-spring</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -40,7 +40,7 @@
     <url>https://github.com/arburk/open-x-day-testcontainers/actions</url>
   </ciManagement>
 
-  <name>Open X Day 27-Jan-2022: Testcontainers</name>
+  <name>Open X Day 27-Jan-2022: Testcontainers - spring example</name>
   <description>Open X Day 27-Jan-2022: Testcontainers</description>
   <url>https://github.com/arburk/open-x-day-testcontainers</url>
 

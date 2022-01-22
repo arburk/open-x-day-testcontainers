@@ -102,8 +102,8 @@
     postgres:12
   ```
 ### Basic setup
-- perform initial application loading test which succeeds `mvn test -f pom.xml`
-- for testing shutdown docker container `openxday_2022-01-27` and perform maven test build again `mvn test -f pom.xml`
+- perform initial application loading test which succeeds `mvn test -f example-spring/pom.xml`
+- for testing shutdown docker container `openxday_2022-01-27` and perform maven test build again `mvn test -f example-spring/pom.xml`
   
   Test will fail now, cause application does not start as db connection cannot be established any longer.
 - Add Testcontainer as described in [previous chapter](#Top2).
@@ -127,12 +127,12 @@
   
   2: Add and configure Postgres Container loaded from dockerhub using image [postgres:12](https://hub.docker.com/_/postgres) 
 
-  3: Spring specific: overwrite config values commonly defined in [resources/application.yaml](./src/main/resources/application.yaml)
+  3: Spring specific: overwrite config values commonly defined in [resources/application.yaml](example-spring/src/main/resources/application.yaml)
 
   4: access container (if necessary) within tests
 
 
-- perform maven test build again `mvn test -f pom.xml` and monitor it suceedes again (as CI build would do).
+- perform maven test build again `mvn test -f example-spring/pom.xml` and monitor it suceedes again (as CI build would do).
 > While executing test you will notice two docker containers started:
 > ![docker tescontainers](docs/images/test_container_list.png)
 
