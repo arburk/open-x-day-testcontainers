@@ -20,11 +20,11 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import com.baloise.open.xday.testcontainers.jpa.derby.AbstractDerbyTest;
+import com.baloise.open.xday.testcontainers.jpa.AbstractOracleTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DemoEntityTest extends AbstractDerbyTest {
+class DemoEntityTest extends AbstractOracleTest {
 
   @Test
   void basicInsertTest() {
