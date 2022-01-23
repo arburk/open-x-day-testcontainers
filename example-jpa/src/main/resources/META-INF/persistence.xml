@@ -25,6 +25,7 @@
   <persistence-unit name="PersistenceUnit">
     <class>com.baloise.open.xday.testcontainers.jpa.demo.DemoEntity</class>
     <class>com.baloise.open.xday.testcontainers.jpa.demo.DemoParts</class>
+    <class>com.baloise.open.xday.testcontainers.jpa.demo.DemoViewUsingListagg</class>
 
     <properties>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver"/>
