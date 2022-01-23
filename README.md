@@ -137,56 +137,51 @@
 > ![docker tescontainers](docs/images/test_container_list.png)
 
 ### Test with real data
-- Create table ['Demotable'](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/resources/db/migration/V1__initial_setup.sql) auto migrated using flyway
-- Add related [JPA class](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoEntity.java) 
-containing some testable logic (as well as related [repository](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepository.java))
-- Add [first test](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/src/test/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepositoryTest.java) based on "real" database
+- Create table ['Demotable'](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/example-spring/src/main/resources/db/migration/V1__initial_setup.sql) auto migrated using flyway
+- Add related [JPA class](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/example-spring/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoEntity.java) 
+containing some testable logic (as well as related [repository](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/example-spring/src/main/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepository.java))
+- Add [first test](https://github.com/arburk/open-x-day-testcontainers/blob/demo/DB_Testing_From_Scratch_WithData/example-spring/src/test/java/com/baloise/open/xday/testcontainers/infrastructure/db/demo/DemoRepositoryTest.java) based on "real" database
 
 review all required changes to steps above at feature branch [demo/DB_Testing_From_Scratch_WithData](https://github.com/arburk/open-x-day-testcontainers/tree/demo/DB_Testing_From_Scratch_WithData)
 
 # <a id="Top4"></a> Migration from [derby](https://db.apache.org/derby/#What+is+Apache+Derby%3F) to [oracle](https://www.oracle.com/ch-de/database/technologies/)
+
 ### Major problems with different database test environment
-- Special DB features not available (e.g., Listagg)
+- Special DB features not available (e.g., [Listagg](https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions089.htm#SQLRF30030))
   
   Requires additional code implementing `org.apache.derby.agg.Aggregator` interface subsequently registed in derby:
   ```java
-  public class Listagg<V extends Number> implements Aggregator<Number, String, Listagg<V>> {
-  
-     private ArrayList<Number> list = null;
-   
-     public Listagg() { }
-   
-     @Override
-     public void init() {
-       list = new ArrayList<>();
-     }
-   
-     @Override
-     public void accumulate(Number number) {
-       list.add(number);
-     }
-   
-     @Override
-     public void merge(Listagg<V> vListagg) {
-       list.addAll(vListagg.list);
-     }
-   
-     @Override
-     public String terminate() {
-       return StringUtils.join(list, ",");
-     }
+  public interface Aggregator<V, R, A extends Aggregator<V, R, A>> extends Serializable {
+    
+    void init();
+
+    void accumulate(V var1);
+
+    void merge(A var1);
+
+    R terminate();
   }
   ```
+  see example com.baloise.open.xday.testcontainers.jpa.[Listagg](example-jpa/src/test/java/com/baloise/open/xday/testcontainers/jpa/derby/Listagg.java)
   ```sql
   CREATE DERBY AGGREGATE Listagg FOR Numeric
   RETURNS VARCHAR(255)
-  EXTERNAL NAME 'com.baloise.open.xday.testcontainers.derby.Listagg';
+  EXTERNAL NAME 'com.baloise.open.xday.testcontainers.jpa.Listagg';
   ```
 - Types differ (Integer vs. BigDecimal)
+  
+  e.g. when executing a `count(*)` statement
 - Syntax differ (e.g. Trigger)
 
-  Requires alternative SQL scripts to setup test environment
+  compare [init_oracle.sql](example-jpa/src/main/resources/init_oracle.sql) with [init_derby.sql](example-jpa/src/test/resources/init_derby.sql)
 
+> ⚠ Alternative SQL script required to setup test environment which needs maintenance ⚠
+> 
+> ⚠ Party different logic tested compared to execution in production ⚠
+
+### Migrate existing derby approach using Oracle testcontainer
+- replace dependencies
+- change base derby test to use testcontainer
 
 > Oracle vs. Derby is +20 second for approximately 200 tests.
 > DBFacade test derby ca. 1:10 min vs Oracle Testcontainer 1:30 min.

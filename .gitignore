@@ -24,7 +24,7 @@
 hs_err_pid*
 
 # Maven Files #
-/target/
+**/target/
 
 # IDE Files
 /.idea/
