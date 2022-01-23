@@ -28,7 +28,7 @@
 # <a id="Motivation"></a> Motivation
 - DB/JPA unit tests using in-memory db like h2 or derby differ to much from real database with respect to
   - values (i.e. Inetger vs. BidDecimal) 
-  - special DB functions (e.g. [Listagg](https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions089.htm#SQLRF30030)) 
+  - special DB functions (e.g. [Listagg][Listagg]) 
   - trigger, views, etc.
 - Development based on local DB or any other local server vs. CI build (e.g. Jenkins, Github actions etc.) 
 
@@ -49,7 +49,7 @@
 
 
 ### Prerequisite
-- [General Docker requirements](https://www.testcontainers.org/supported_docker_environment/)
+- [General Docker requirements][DockerEnvironment]
 - A supported JVM testing framework like Junit(4/5), Spock or manually controlled
 
 # <a id="Top2"></a> Example usage
@@ -147,7 +147,7 @@ review all required changes to steps above at feature branch [demo/DB_Testing_Fr
 # <a id="Top4"></a> Migration from [derby](https://db.apache.org/derby/#What+is+Apache+Derby%3F) to [oracle](https://www.oracle.com/ch-de/database/technologies/)
 
 ### Major problems with different database test environment
-- Special DB features not available (e.g., [Listagg](https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions089.htm#SQLRF30030))
+- Special DB features not available (e.g., [Listagg][Listagg])
   
   Requires additional code implementing `org.apache.derby.agg.Aggregator` interface subsequently registed in derby:
   ```java
@@ -181,19 +181,53 @@ review all required changes to steps above at feature branch [demo/DB_Testing_Fr
 
 ### Migrate existing derby approach using Oracle testcontainer
 - replace dependencies
-- change base derby test to use testcontainer
+  ![dependency_replacement](docs/images/replaced_dependencies.png)
+- change base derby test to use testcontainer and remove all derby requried files
+  - 🗑 test/java/com/baloise/open/xday/testcontainers/jpa/derby/Listagg.java
+  - 🗑 test/resources/META-INF/persistence
+  - 🗑 test/init_oracle.sql
 
-> Oracle vs. Derby is +20 second for approximately 200 tests.
-> DBFacade test derby ca. 1:10 min vs Oracle Testcontainer 1:30 min.
+>👍 Using production resources like [persistence.xml](example-jpa/src/main/resources/META-INF/persistence.xml) as well as [init_oracle.sql](example-jpa/src/main/resources/init_oracle.sql)
+>
+>👎 execution time increases as oracle db needs way more resources
+
+Experience from productional change 
+> 🛈 Oracle vs. Derby is +20 seconds for approximately 200 tests.
+> Test derby ca. 1:10 minutes vs Oracle testcontainer 1:30 min.
 
 # <a id="Top5"></a>Limitations
 
+- [Docker runtime][DockerEnvironment] must be existent in order to use on local developer machine as well as on [CI environment](https://www.testcontainers.org/supported_docker_environment/continuous_integration/dind_patterns/).
+- Jenkins support with podman >= v3
 
+  🛈 If not available in CI environment use separate maven profile for local/CI build
 
 
 # <a id="Top6"></a>Conclusion
 
-
+- Test code/behaviour using real environment (not a mocked one)
+- supports a wide range of systems out of the box, like
+  - [Databases](https://www.testcontainers.org/modules/databases/)
+  - Azure
+  - Docker-Compose
+  - Elasticsearch
+  - Google Cloud SDK
+  - AWS
+  - Kubernetes
+  - Kafka
+  - Nginx
+  - Solr
+  - Webdriver 
+  - ...
+- Use own build containers by [GenericContainer](https://www.testcontainers.org/features/creating_container/)
+  - Use any server available as container
+  - Configure predefined test scenarios in dedicated testcontainer
+- Easy to adopt and use
+- ⚠ May slow down test execution depending on
+  - number of containers used
+  - startup time and resources required by used containers
 
 
 [Testcontainers]: https://www.testcontainers.org/
+[DockerEnvironment]: https://www.testcontainers.org/supported_docker_environment
+[Listagg]: https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions089.htm#SQLRF30030
