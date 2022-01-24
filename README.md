@@ -175,9 +175,11 @@ review all required changes to steps above at feature branch [demo/DB_Testing_Fr
 
   compare [init_oracle.sql](example-jpa/src/main/resources/init_oracle.sql) with [init_derby.sql](example-jpa/src/test/resources/init_derby.sql)
 
-> ⚠ Alternative SQL script required to setup test environment which needs maintenance ⚠
+> ⚠ Partly different logic tested compared to execution in production ⚠
 > 
-> ⚠ Party different logic tested compared to execution in production ⚠
+> ⚠ Alternative SQL script required to setup test environment which needs maintenance ⚠
+>  ![diff](docs/images/sql_diff.png)
+
 
 ### Migrate existing derby approach using Oracle testcontainer
 - replace dependencies
