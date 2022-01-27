@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2022 Baloise Group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baloise.open.xday.testcontainers;
+package com.baloise.open.xday.testcontainers.infrastructure.db.demo;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-@SpringBootTest
-class TestcontainersApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+@Repository
+public interface DemoRepository extends  CrudRepository<DemoEntity, Long> {
 }
