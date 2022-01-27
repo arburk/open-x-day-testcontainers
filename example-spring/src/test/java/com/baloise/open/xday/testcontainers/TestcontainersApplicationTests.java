@@ -17,12 +17,38 @@ package com.baloise.open.xday.testcontainers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 @SpringBootTest
+@ContextConfiguration(initializers = {TestcontainersApplicationTests.Initializer.class})
 class TestcontainersApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+  @Container
+  public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
+      .withDatabaseName("openx")
+      .withUsername("postgres")
+      .withPassword("postgres");
+
+  static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+      TestPropertyValues.of(
+          "spring.datasource.url=" + postgres.getJdbcUrl(),
+          "spring.datasource.username=" + postgres.getUsername(),
+          "spring.datasource.password=" + postgres.getPassword()
+      ).applyTo(configurableApplicationContext.getEnvironment());
+    }
+  }
+
+  @Test
+  void contextLoads() {
+    postgres.isRunning();
+  }
 
 }
