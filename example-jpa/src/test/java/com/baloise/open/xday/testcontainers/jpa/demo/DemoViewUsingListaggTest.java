@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.baloise.open.xday.testcontainers.jpa.derby.AbstractDerbyTest;
+import com.baloise.open.xday.testcontainers.jpa.AbstractOracleTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DemoViewUsingListaggTest extends AbstractDerbyTest {
+class DemoViewUsingListaggTest extends AbstractOracleTest {
 
   @Test
   void ViewTest() {
