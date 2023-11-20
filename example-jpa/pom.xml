@@ -53,7 +53,7 @@
     <lombok.version>1.18.28</lombok.version>
     <hibernate.version>5.6.3.Final</hibernate.version>
     <oracle.jdbc.version>21.4.0.0</oracle.jdbc.version>
-    <derby.version>10.14.2.0</derby.version>
+    <derby.version>10.17.1.0</derby.version>
   </properties>
 
   <build>
