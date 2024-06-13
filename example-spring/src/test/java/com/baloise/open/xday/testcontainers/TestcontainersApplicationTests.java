@@ -30,25 +30,25 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ContextConfiguration(initializers = {TestcontainersApplicationTests.Initializer.class})
 class TestcontainersApplicationTests {
 
-  @Container
-  public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
-      .withDatabaseName("openx")
-      .withUsername("postgres")
-      .withPassword("postgres");
+	@Container
+	public static PostgreSQLContainer postgres = new PostgreSQLContainer<>("postgres:12")
+			.withDatabaseName("openx")
+			.withUsername("postgres")
+			.withPassword("postgres");
 
-  static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-      TestPropertyValues.of(
-          "spring.datasource.url=" + postgres.getJdbcUrl(),
-          "spring.datasource.username=" + postgres.getUsername(),
-          "spring.datasource.password=" + postgres.getPassword()
-      ).applyTo(configurableApplicationContext.getEnvironment());
-    }
-  }
+	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+			TestPropertyValues.of(
+					"spring.datasource.url=" + postgres.getJdbcUrl(),
+					"spring.datasource.username=" + postgres.getUsername(),
+					"spring.datasource.password=" + postgres.getPassword()
+			).applyTo(configurableApplicationContext.getEnvironment());
+		}
+	}
 
-  @Test
-  void contextLoads() {
-    postgres.isRunning();
-  }
+	@Test
+	void contextLoads() {
+		postgres.isRunning();
+	}
 
 }
